@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera & Screenshot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        video {
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+        canvas {
+            display: none;
+        }
+        #screenshot {
+            margin-top: 10px;
+            width: 80%;
+            max-width: 600px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Camera & Screenshot</h1>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+    <img id="screenshot" alt="Screenshot will appear here">
+
+    <script>
+        // Get user media (camera & microphone access)
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('video').srcObject = stream;
+            } catch (error) {
+                console.error("Error accessing camera/microphone:", error);
+                alert("Please allow camera and microphone access.");
+            }
+        }
+
+        // Function to take a screenshot
+        function takeScreenshot() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const screenshotUrl = canvas.toDataURL("image/png");
+            document.getElementById('screenshot').src = screenshotUrl;
+
+            console.log("Screenshot taken at:", new Date().toLocaleTimeString());
+        }
+
+        // Start camera on page load
+        startCamera();
+
+        // Take screenshot automatically after 20 minutes (1200 seconds)
+        setTimeout(takeScreenshot, 1200 * 1000); 
+    </script>
+
+</body>
+</html>
