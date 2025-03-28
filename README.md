@@ -1,0 +1,2 @@
+# arafat
+just for fun
